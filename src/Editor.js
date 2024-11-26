@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
 import Quill from 'quill';
 
-const toolbarOptions = ['bold', 'link', 'image'];
+const toolbarOptions = [[{ 'header': 1 }, 'bold', 'link', 'image']];
 
 // Editor is an uncontrolled React component
 const Editor = forwardRef(
