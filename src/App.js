@@ -4,7 +4,7 @@ import Editor from './Editor';
 import './App.css';
 
 const App = () => {
-	const [contents, setContents] = useState(['', '', '']);
+	const [contents, setContents] = useState([null, null, null]);
 
 	const [activeTab, setActiveTab] = useState(0);
 
@@ -14,7 +14,7 @@ const App = () => {
 	const saveActiveTabContentInState = () => {
 		const nextContents = contents.map((content, index) => {
 			if (index === activeTab) {
-				return quillRef.current.container.textContent;
+				return quillRef.current.getContents();
 			} else {
 				return content;
 			}
@@ -26,7 +26,7 @@ const App = () => {
 	const handleActiveTabChange = (index) => {
 		saveActiveTabContentInState();
 		setActiveTab(prevIndex => {
-			quillRef.current.setContents([{ insert: contents[index] }]);
+			quillRef.current.setContents(contents[index]);
 			return index;
 		});
 	}
