@@ -18,15 +18,16 @@ const GetHtmlFromDeltaOpsString = (deltaOps) => {
             result += `${current}</p><p>`
         }
         else {
-            result += current;
+            if (current.length > 0) {
+                result += current;
+            }
+            else {
+                result = result.substring(0, result.length - "<p>".length);
+            }
         }
     }
-    
-    if (result.endsWith("<p>")) {
-        result = result.substring(0, result.length - 3);
-    }
 
-    return result.replaceAll("<p></p>", "<br/>");
+    return result;
 }
 
 export const GetHtmlFromDelta = (delta) => {
@@ -58,32 +59,7 @@ export const GetHtmlFromDelta = (delta) => {
                 currentIndex++;
                 continue;
             }
-            
-            if (current.insert === "\n") {
-                let needContinue = false;
-                if (tempResult[currentIndex] !== undefined) {
-                    needContinue = tempResult[currentIndex].closed === false;
 
-                    tempResult[currentIndex].closed = true;
-                    tempResult[currentIndex].content += "</p>";
-                    
-                    currentIndex++;
-                }
-
-                if (needContinue) {
-                    continue;
-                }
-
-                tempResult.push({
-                    type: "br",
-                    content: "<br/>",
-                    closed: true
-                });
-
-                currentIndex++;
-
-                continue;
-            }
             if (tempResult[currentIndex] === undefined) {
                 tempResult.push({
                     type: "p",
@@ -101,7 +77,7 @@ export const GetHtmlFromDelta = (delta) => {
             }
         }
         else {
-            if (tempResult[currentIndex] !== undefined && tempResult[currentIndex].type !== "img" && tempResult[currentIndex].closed === false) {
+            if (tempResult[currentIndex] !== undefined && tempResult[currentIndex].closed === false) {
                 tempResult[currentIndex].content += `</${tempResult[currentIndex].type}>`;
                 tempResult[currentIndex].closed = true;
                 
@@ -118,6 +94,16 @@ export const GetHtmlFromDelta = (delta) => {
         }
     }
 
-    return `<div class='content-block'>${tempResult.map(x => x.content).join('')}</div>`;
+    for (let i = 1; i < tempResult.length; i++) {
+        if (tempResult[i].content.startsWith("<p></p>") && tempResult[i - 1].type === "img") {
+            tempResult[i].content = tempResult[i].content.replace("<p></p>", "");
+        }
+    }
+
+    let result = tempResult
+        .map(x => x.closed ? x.content : "")
+        .join('')
+        .replaceAll("<p></p>", "<br/>");
+    return `<div class='content-block'>${result}</div>`;
 }
 
