@@ -1,6 +1,8 @@
 import React, { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
 import Quill from 'quill';
 
+const toolbarOptions = ['bold', 'link', 'image'];
+
 // Editor is an uncontrolled React component
 const Editor = forwardRef(
   ({ readOnly, defaultValue, onTextChange, onSelectionChange }, ref) => {
@@ -25,6 +27,9 @@ const Editor = forwardRef(
       );
       const quill = new Quill(editorContainer, {
         theme: 'snow',
+        modules: {
+            toolbar: toolbarOptions
+        }
       });
 
       ref.current = quill;

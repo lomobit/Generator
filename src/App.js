@@ -4,29 +4,31 @@ import Editor from './Editor';
 import './App.css';
 
 const App = () => {
-	const [contents, setContents] = useState({
-		0: '',
-		1: '',
-		2: ''
-	});
+	const [contents, setContents] = useState(['', '', '']);
+
 	const [activeTab, setActiveTab] = useState(0);
 
 	// Use a ref to access the quill instance directly
 	const quillRef = useRef();
 
-	const handleActiveTabChange = (index) => {
-		console.log(index);
+	const saveActiveTabContentInState = () => {
+		const nextContents = contents.map((content, index) => {
+			if (index === activeTab) {
+				return quillRef.current.container.textContent;
+			} else {
+				return content;
+			}
+		});
 
-		setActiveTab(index);
+		setContents(nextContents);
 	}
 
-	const handleTextChange = (value) => {
-		console.log(value);
-
-		setContents(prev => ({
-			...prev,
-			[activeTab]: value
-		}));
+	const handleActiveTabChange = (index) => {
+		saveActiveTabContentInState();
+		setActiveTab(prevIndex => {
+			quillRef.current.setContents([{ insert: contents[index] }]);
+			return index;
+		});
 	}
 
 	const getStyleForTabButton = (index) => {
@@ -40,6 +42,10 @@ const App = () => {
 		}
 	}
 
+	const handleGenerationClick = () => {
+		saveActiveTabContentInState();
+	}
+
 	return (
 		<div 
 			style={{
@@ -48,39 +54,51 @@ const App = () => {
 				marginRight: "auto",
 			}}
 		>
-			<h1>Вкладки</h1>
-			<div style={{
-				marginTop: "20px",
-				marginBottom: "5px"
-			}}>
-				<button
-					onClick={() => handleActiveTabChange(0)}
-					style={getStyleForTabButton(0)}
-				>
-					Описание
-				</button>
-				<button
-					onClick={() => handleActiveTabChange(1)}
-					style={getStyleForTabButton(1)}
-				>
-					Немного фактов
-				</button>
-				<button
-					onClick={() => handleActiveTabChange(2)}
-					style={getStyleForTabButton(2)}
-				>
-					Полезные советы
-				</button>
+			<div>
+				<h1>Вкладки</h1>
+				<div style={{
+					marginTop: "20px",
+					marginBottom: "5px"
+				}}>
+					<button
+						onClick={() => handleActiveTabChange(0)}
+						style={getStyleForTabButton(0)}
+					>
+						Описание
+					</button>
+					<button
+						onClick={() => handleActiveTabChange(1)}
+						style={getStyleForTabButton(1)}
+					>
+						Немного фактов
+					</button>
+					<button
+						onClick={() => handleActiveTabChange(2)}
+						style={getStyleForTabButton(2)}
+					>
+						Полезные советы
+					</button>
+				</div>
+				<div style={{
+					width: "1080px"
+				}}>
+					<Editor
+						value={contents[activeTab]}
+						ref={quillRef}
+					/>
+				</div>
 			</div>
-			<div style={{
-				width: "1080px"
-			}}>
-				<Editor
-					value={contents[activeTab]}
-					ref={quillRef}
-					onTextChange={handleTextChange}
-				/>
-			</div>
+			<button
+				onClick={handleGenerationClick}
+				style={{
+					marginTop: "20px",
+					height: "40px",
+					fontWeight: "bold",
+					cursor: "pointer",
+				}}
+			>
+				Сгенерировать JSON
+			</button>
 		</div>
 	);
 };
