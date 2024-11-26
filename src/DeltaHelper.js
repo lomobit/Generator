@@ -6,7 +6,11 @@ const GetHtmlFromDeltaOpsString = (deltaOps) => {
         let current = input[i];
         if (deltaOps.attributes !== undefined) {
             if (deltaOps.attributes.bold === true) {
-                current = `<span class='bold-text'>${input[i]}</span>`;
+                current = `<span class='bold-text'>${current}</span>`;
+            }
+            
+            if (deltaOps.attributes.link !== undefined) {
+                current = `<a href="${deltaOps.attributes.link}">${current}</a>`;
             }
         }
 
