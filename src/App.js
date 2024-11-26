@@ -1,17 +1,21 @@
 import React, { useRef, useState } from 'react';
 import Editor from './Editor';
+import { GetHtmlFromDelta } from './DeltaHelper';
 
 import './App.css';
 
 const App = () => {
 	const [contents, setContents] = useState([null, null, null]);
-
 	const [activeTab, setActiveTab] = useState(0);
 
 	// Use a ref to access the quill instance directly
 	const quillRef = useRef();
 
 	const saveActiveTabContentInState = () => {
+		console.log(quillRef.current.getContents());
+		console.log(quillRef.current.getText());
+		console.log(quillRef.current.getFormat());
+
 		const nextContents = contents.map((content, index) => {
 			if (index === activeTab) {
 				return quillRef.current.getContents();
@@ -44,6 +48,8 @@ const App = () => {
 
 	const handleGenerationClick = () => {
 		saveActiveTabContentInState();
+
+		console.log(GetHtmlFromDelta(contents[activeTab]));
 	}
 
 	return (
