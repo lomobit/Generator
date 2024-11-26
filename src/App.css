@@ -18,10 +18,3 @@
 	color: #999;
 	text-transform: uppercase;
 }
-
-.ql-toolbar.ql-snow {
-	border: 1px solid #ccc;
-	box-sizing: border-box;
-	font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-	padding: 8px;
-}

@@ -29,16 +29,48 @@ const App = () => {
 		}));
 	}
 
+	const getStyleForTabButton = (index) => {
+		return {
+			background: activeTab === index ? "gray" : "lightgray",
+			color: activeTab === index ? "white" : "black",
+			fontWeight: activeTab === index ? "bold" : "normal",
+			height: "30px",
+			marginRight: "2px",
+			cursor: "pointer",
+		}
+	}
+
 	return (
-		<>
+		<div 
+			style={{
+				width: "1080px",
+				marginLeft: "auto",
+				marginRight: "auto",
+			}}
+		>
 			<h1>Вкладки</h1>
 			<div style={{
 				marginTop: "20px",
-				marginBottom: "10px"
+				marginBottom: "5px"
 			}}>
-				<button onClick={() => handleActiveTabChange(0)}>Описание</button>
-				<button onClick={() => handleActiveTabChange(1)}>Немного фактов</button>
-				<button onClick={() => handleActiveTabChange(2)}>Полезные советы</button>
+				<button
+					onClick={() => handleActiveTabChange(0)}
+					style={getStyleForTabButton(0)}
+				>
+					Описание
+				</button>
+				<button
+					onClick={() => handleActiveTabChange(1)}
+					style={getStyleForTabButton(1)}
+				>
+					Немного фактов
+				</button>
+				<button
+					onClick={() => handleActiveTabChange(2)}
+					style={getStyleForTabButton(2)}
+				>
+					Полезные советы
+				</button>
 			</div>
 			<div style={{
 				width: "1080px"
@@ -49,7 +81,7 @@ const App = () => {
 					onTextChange={handleTextChange}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 
