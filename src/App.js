@@ -11,11 +11,7 @@ const App = () => {
 	// Use a ref to access the quill instance directly
 	const quillRef = useRef();
 
-	const saveActiveTabContentInState = () => {
-		console.log(quillRef.current.getContents());
-		console.log(quillRef.current.getText());
-		console.log(quillRef.current.getFormat());
-
+	const handleActiveTabChange = (index) => {
 		const nextContents = contents.map((content, index) => {
 			if (index === activeTab) {
 				return quillRef.current.getContents();
@@ -25,10 +21,6 @@ const App = () => {
 		});
 
 		setContents(nextContents);
-	}
-
-	const handleActiveTabChange = (index) => {
-		saveActiveTabContentInState();
 		setActiveTab(prevIndex => {
 			quillRef.current.setContents(contents[index]);
 			return index;
@@ -47,9 +39,17 @@ const App = () => {
 	}
 
 	const handleGenerationClick = () => {
-		saveActiveTabContentInState();
+		const nextContents = contents.map((content, index) => {
+			if (index === activeTab) {
+				return quillRef.current.getContents();
+			} else {
+				return content;
+			}
+		});
 
-		console.log(GetHtmlFromDelta(contents[activeTab]));
+		console.log(GetHtmlFromDelta(nextContents[activeTab]));
+
+		setContents(nextContents);
 	}
 
 	return (
